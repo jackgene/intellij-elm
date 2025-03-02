@@ -79,7 +79,7 @@ class ElmBuildAction : AnAction() {
         }
         project.messageBus.syncPublisher(ERRORS_TOPIC).update(elmProject.projectDirPath, messages, targetPath, offset)
         if (isUnitTestMode) return
-        ToolWindowManager.getInstance(project).getToolWindow("Elm Compiler").show(null)
+        ToolWindowManager.getInstance(project).getToolWindow("Elm Compiler")?.show(null)
     }
 
     private fun findMainEntryPoint(project: Project, elmProject: ElmProject): ElmFunctionDeclarationLeft? =

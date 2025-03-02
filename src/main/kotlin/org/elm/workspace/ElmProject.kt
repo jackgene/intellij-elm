@@ -309,7 +309,7 @@ private fun Map<String, Constraint>.constraintDepsToPackages(repo: ElmPackageRep
         map { (name, constraint) ->
             val version = repo.availableVersionsForPackage(name)
                     .filter { constraint.contains(it) }
-                    .min()
+                    .minOrNull()
                     ?: throw ProjectLoadException("Could not load $name ($constraint). Is it installed?")
 
             loadDependency(repo, name, version)

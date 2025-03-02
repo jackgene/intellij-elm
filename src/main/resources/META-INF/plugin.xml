@@ -278,11 +278,8 @@
     ]]>
     </change-notes>
 
-    <!--
-    See http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html
-    Note that the range is half-open: [since-build, until-build)
-     -->
-    <idea-version since-build="191.4212.41" until-build="202.*"/>
+    <!-- `<idea-version since-build="..."/>` and `<idea-version until-build="..."/>` are set by the `patchPluginXml`
+         Gradle task, with values from `gradle.properties`. -->
 
 
     <depends>com.intellij.modules.lang</depends>

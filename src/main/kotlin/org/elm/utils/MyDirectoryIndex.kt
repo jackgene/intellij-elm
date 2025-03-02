@@ -40,7 +40,7 @@ import com.intellij.util.containers.ContainerUtil
 
 private val log = logger<MyDirectoryIndex<*>>()
 
-class MyDirectoryIndex<T>(parentDisposable: Disposable,
+class MyDirectoryIndex<T : Any>(parentDisposable: Disposable,
                           private val myDefValue: T,
                           private val myInitializer: Consumer<MyDirectoryIndex<T>>) {
 
