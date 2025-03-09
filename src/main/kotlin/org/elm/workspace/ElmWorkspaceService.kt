@@ -17,6 +17,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.roots.ModuleRootModificationUtil
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx
 import com.intellij.openapi.util.EmptyRunnable
 import com.intellij.openapi.util.SimpleModificationTracker
@@ -398,12 +399,14 @@ class ElmWorkspaceService(
                         // TODO [drop 0.18] always exclude `elm-stuff` and do this earlier in the
                         //      process so that we don't have to jump back over to the EDT.
                         ApplicationManager.getApplication().invokeLater {
-                            intellijProject.modules.asSequence()
-                                    .flatMap { ModuleRootManager.getInstance(it).contentEntries.asSequence() }
-                                    .forEach {
+                            for (module in intellijProject.modules.asSequence()) {
+                                ModuleRootModificationUtil.updateModel(module) { model ->
+                                    model.contentEntries.forEach {
                                         if ("elm-stuff" !in it.excludePatterns)
                                             it.addExcludePattern("elm-stuff")
                                     }
+                                }
+                            }
                         }
                     }
 
