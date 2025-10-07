@@ -3,7 +3,6 @@ package org.elm.workspace
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.util.io.FileUtil
-import com.intellij.util.io.exists
 import org.elm.workspace.commandLineTools.ElmCLI
 import org.elm.workspace.commandLineTools.ElmFormatCLI
 import org.elm.workspace.commandLineTools.ElmTestCLI
@@ -11,6 +10,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.io.path.exists
 
 data class ElmToolchain(
         val elmCompilerPath: Path?,

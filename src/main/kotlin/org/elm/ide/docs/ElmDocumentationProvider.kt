@@ -264,7 +264,7 @@ private fun StringBuilder.renderDocContent(element: ElmDocTarget?, transform: (S
 }
 
 private class ElmDocMarkdownFlavourDescriptor(
-        private val gfm: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
+        private val gfm: MarkdownFlavourDescriptor = GFMFlavourDescriptor(true, false, false)
 ) : MarkdownFlavourDescriptor by gfm {
 
     override fun createHtmlGeneratingProviders(linkMap: LinkMap, baseURI: URI?): Map<IElementType, GeneratingProvider> {
