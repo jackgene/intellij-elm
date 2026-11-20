@@ -14,8 +14,8 @@ import org.elm.lang.core.psi.startOffset
 fun String.toElmLowerId(): String =
         when {
             isEmpty() -> ""
-            all { it.isUpperCase() } -> toLowerCase()
-            else -> first().toLowerCase() + substring(1)
+            all { it.isUpperCase() } -> lowercase()
+            else -> first().lowercaseChar() + substring(1)
         }
 
 /**

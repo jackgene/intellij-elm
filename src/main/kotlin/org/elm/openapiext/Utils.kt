@@ -22,7 +22,6 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
-import com.intellij.openapi.vfs.ex.temp.TempFileSystem
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -162,7 +161,7 @@ fun LocalFileSystem.findFileByPath(path: Path): VirtualFile? {
  */
 fun findFileByPathTestAware(path: Path): VirtualFile? {
     if (isUnitTestMode) {
-        val vFile = TempFileSystem.getInstance().findFileByPath(path)
+        val vFile = VirtualFileManager.getInstance().getFileSystem("temp")?.findFileByPath(path.toString())
         if (vFile != null) {
             return vFile
         }

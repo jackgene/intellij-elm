@@ -17,7 +17,7 @@ class ElmSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer() =
             ElmIncrementalLexer()
 
-    override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> =
+    override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> =
             pack(map(tokenType)?.textAttributesKey)
 
     companion object {

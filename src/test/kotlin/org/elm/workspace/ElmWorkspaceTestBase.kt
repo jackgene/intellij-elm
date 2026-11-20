@@ -15,6 +15,8 @@ import org.elm.FileTreeBuilder
 import org.elm.TestProject
 import org.elm.fileTree
 import java.util.concurrent.CompletableFuture
+import com.intellij.testFramework.IndexingTestUtil
+import com.intellij.util.ThrowableRunnable
 
 /**
  * Base class for "heavy" integration tests such as those that depend on the Elm toolchain
@@ -51,12 +53,12 @@ abstract class ElmWorkspaceTestBase : CodeInsightFixtureTestCase<ModuleFixtureBu
     }
 
 
-    override fun runTest() {
+    override fun runTestRunnable(testRunnable: ThrowableRunnable<Throwable>) {
         if (!toolchain.looksLikeValidToolchain()) {
             System.err.println("SKIP $name: no Elm toolchain found")
             return
         }
-        super.runTest()
+        super.runTestRunnable(testRunnable)
     }
 
 
@@ -79,6 +81,8 @@ abstract class ElmWorkspaceTestBase : CodeInsightFixtureTestCase<ModuleFixtureBu
 
     fun buildProject(builder: FileTreeBuilder.() -> Unit): TestProject {
         val result = fileTree(builder).asyncCreateWithAutoDiscover().get()
+        // Package roots added by the workspace are indexed asynchronously
+        IndexingTestUtil.waitUntilIndexesAreReady(project)
         require(project.elmWorkspace.allProjects.isNotEmpty()) { "no Elm project was loaded" }
         return result
     }

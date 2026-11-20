@@ -1,13 +1,14 @@
 package org.elm.ide.intentions
 
-import com.intellij.codeInsight.intention.IntentionManager
+import com.intellij.codeInsight.intention.IntentionActionBean
+import com.intellij.openapi.extensions.ExtensionPointName
 import org.elm.lang.ElmTestBase
 
 class ElmIntentionDocsTest : ElmTestBase() {
 
     fun `test intentions has documentation`() {
-        IntentionManager.EP_INTENTION_ACTIONS
-                .extensions
+        ExtensionPointName<IntentionActionBean>("com.intellij.intentionAction")
+                .extensionList
                 .filter { it.category?.startsWith("Elm") == true }
                 .forEach {
                     val simpleName = it.className.substringAfterLast(".")

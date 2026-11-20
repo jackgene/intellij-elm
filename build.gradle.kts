@@ -1,6 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -8,15 +9,13 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.9.23"
-    // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.13.3" // Does not work with Gradle 8.6 (1.14+ requires Gradle 7.6+)
-    // GrammarKit Plugin (versions > 2021.2.2 require JDK17)
-    id("org.jetbrains.grammarkit") version "2022.3.2.2"
+    id("org.jetbrains.kotlin.jvm") version "2.4.21"
+    // IntelliJ Platform Gradle Plugin
+    id("org.jetbrains.intellij.platform") version "2.20.1"
+    // GrammarKit Plugin
+    id("org.jetbrains.grammarkit") version "2023.3.0.4"
     // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "1.3.1"
-    // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.13"
+    id("org.jetbrains.changelog") version "2.5.0"
 }
 
 group = properties("pluginGroup")
@@ -25,36 +24,69 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
     implementation("com.github.ajalt.colormath:colormath:2.1.0")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.23")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:2.4.21")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.opentest4j:opentest4j:1.3.0")
+
+    intellijPlatform {
+        intellijIdea(properties("platformVersion"))
+        // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
+        bundledPlugins(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+        bundledModules(
+            "intellij.spellchecker",
+            "intellij.libraries.jackson",
+            "intellij.libraries.jackson.databind",
+        )
+        testFramework(TestFrameworkType.Platform)
+        // The spell checking inspection lives in Grazie
+        testBundledPlugin("tanvd.grazi")
+    }
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
+// Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
+intellijPlatform {
+    pluginConfiguration {
+        name = properties("pluginName")
+        version = properties("pluginVersion")
+        // Change notes are maintained by hand in `plugin.xml`.
+        changeNotes = provider { null }
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+        ideaVersion {
+            sinceBuild = properties("pluginSinceBuild")
+            untilBuild = provider { null }
+        }
+
+        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
+        description = projectDir.resolve("README.md").readText().lines().run {
+            val start = "<!-- Plugin description -->"
+            val end = "<!-- Plugin description end -->"
+
+            if (!containsAll(listOf(start, end))) {
+                throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+            }
+            subList(indexOf(start) + 1, indexOf(end))
+        }.joinToString("\n").run { markdownToHTML(this) }
+    }
+
+    pluginVerification {
+        ides {
+            current()
+        }
+    }
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
     version.set(properties("pluginVersion"))
     groups.set(emptyList())
-}
-
-// Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
-qodana {
-    cachePath.set(projectDir.resolve(".qodana").canonicalPath)
-    reportPath.set(projectDir.resolve("build/reports/inspections").canonicalPath)
-    saveReport.set(true)
-    showReport.set(System.getenv("QODANA_SHOW_REPORT")?.toBoolean() ?: false)
 }
 
 val generateGrammars = tasks.register("generateGrammars") {
@@ -102,7 +134,7 @@ tasks {
             targetCompatibility = it
         }
         withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = it
+            compilerOptions.jvmTarget.set(JvmTarget.fromTarget(it))
         }
     }
 
@@ -127,28 +159,4 @@ tasks {
         purgeOldFiles.set(true)
     }
 
-    patchPluginXml {
-        version.set(properties("pluginVersion"))
-
-        // This prevents the patching `plugin.xml`. as set these manually as `patchPluginXml` can mess it up.
-        // See: https://intellij-support.jetbrains.com/hc/en-us/community/posts/360010590059-Why-pluginUntilBuild-is-mandatory
-        // Commented out for now as it breaks certain GitHub Workflows
-        // intellij.updateSinceUntilBuild.set(false)
-
-        sinceBuild.set(properties("pluginSinceBuild"))
-        untilBuild.set(properties("pluginUntilBuild"))
-
-        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription.set(
-            projectDir.resolve("README.md").readText().lines().run {
-                val start = "<!-- Plugin description -->"
-                val end = "<!-- Plugin description end -->"
-
-                if (!containsAll(listOf(start, end))) {
-                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
-                }
-                subList(indexOf(start) + 1, indexOf(end))
-            }.joinToString("\n").run { markdownToHTML(this) }
-        )
-    }
 }

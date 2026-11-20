@@ -9,3 +9,4 @@ gen/
 dist/
 testData/
 
+.intellijPlatform/

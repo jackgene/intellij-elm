@@ -39,7 +39,7 @@ interface ElmTestCase {
     /**
      * The relative path to the test fixture data within the Test Resources root.
      *
-     * This is the key data that [LightPlatformCodeInsightFixtureTestCase] needs
+     * This is the key data that [BasePlatformTestCase] needs
      * to be able to find the location of your test fixtures, and it *MUST* be
      * overridden by IntelliJ plugins. Unfortunately, the method is not abstract
      * so we can't rely on the compiler to verify that we have overridden it, so

@@ -69,7 +69,7 @@ Elm File
       PsiElement(EQ)('=')
       PsiWhiteSpace(' ')
       PsiElement(UPPER_CASE_IDENTIFIER)('String')
-      PsiErrorElement:unmatched input
+      PsiErrorElement:Unmatched input
         <empty list>
   PsiElement(VIRTUAL_END_DECL)('\n')
   PsiWhiteSpace('\n')

@@ -1,9 +1,9 @@
 package org.elm.ide.inspections.import
 
 import com.intellij.codeInsight.intention.PriorityAction.Priority
-import com.intellij.codeInsight.navigation.NavigationUtil
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.psi.PsiElement
@@ -145,7 +145,9 @@ private class RealImportPickerUI(
                 .setNamerForFiltering { it.moduleName }
                 .setRenderer(CandidateRenderer())
                 .createPopup()
-        NavigationUtil.hidePopupIfDumbModeStarts(popup, project)
+        project.messageBus.connect(popup).subscribe(DumbService.DUMB_MODE, object : DumbService.DumbModeListener {
+            override fun enteredDumbMode() = popup.cancel()
+        })
         popup.showInBestPositionFor(dataContext)
     }
 }

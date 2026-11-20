@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VirtualFileWithId
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.util.Consumer
-import com.intellij.util.containers.ContainerUtil
+import java.util.concurrent.ConcurrentHashMap
 
 private val log = logger<MyDirectoryIndex<*>>()
 
@@ -44,7 +44,7 @@ class MyDirectoryIndex<T : Any>(parentDisposable: Disposable,
                           private val myDefValue: T,
                           private val myInitializer: Consumer<MyDirectoryIndex<T>>) {
 
-    private val myInfoCache = ContainerUtil.createConcurrentIntObjectMap<T>()
+    private val myInfoCache = ConcurrentHashMap<Int, T>()
 
     init {
         resetIndex()

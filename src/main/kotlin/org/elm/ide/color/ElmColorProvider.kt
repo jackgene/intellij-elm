@@ -1,7 +1,6 @@
 package org.elm.ide.color
 
 import com.github.ajalt.colormath.*
-import com.intellij.ide.IdeBundle
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.editor.ElementColorProvider
 import com.intellij.psi.PsiDocumentManager
@@ -94,7 +93,7 @@ class ElmColorProvider : ElementColorProvider {
                 element.project,
                 command,
                 // This is the message that the JavaColorProvider uses
-                IdeBundle.message("change.color.command.text"),
+                "Change Color",
                 null, // groupId
                 document
         )

@@ -14,7 +14,7 @@ Elm File
         PsiElement(LOWER_CASE_IDENTIFIER)('xyz')
       PsiWhiteSpace(' ')
       PsiElement(RIGHT_BRACE)('}')
-    PsiErrorElement:unmatched input
+    PsiErrorElement:Unmatched input
       <empty list>
   PsiElement(VIRTUAL_END_DECL)('\n')
   PsiWhiteSpace('\n')
@@ -37,7 +37,7 @@ Elm File
     PsiElement(ELSE)('else')
     PsiWhiteSpace(' ')
     PsiElement(NUMBER_LITERAL)('2')
-    PsiErrorElement:unmatched input
+    PsiErrorElement:Unmatched input
       <empty list>
   PsiElement(VIRTUAL_END_DECL)('\n')
   PsiWhiteSpace('\n')
@@ -52,7 +52,7 @@ Elm File
       PsiElement(LEFT_SQUARE_BRACKET)('[')
     PsiElement(LOWER_CASE_IDENTIFIER)('garbage')
     PsiElement(RIGHT_SQUARE_BRACKET)(']')
-    PsiErrorElement:unmatched input
+    PsiErrorElement:Unmatched input
       <empty list>
   PsiElement(VIRTUAL_END_DECL)('\n')
   PsiWhiteSpace('\n')

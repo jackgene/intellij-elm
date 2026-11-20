@@ -42,7 +42,7 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.impl.PsiManagerEx
 import com.intellij.testFramework.LightProjectDescriptor
 import com.intellij.testFramework.PlatformTestUtil
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import junit.framework.AssertionFailedError
 import org.elm.FileTree
 import org.elm.TestProject
@@ -70,7 +70,7 @@ private val log = logger<ElmTestBase>()
  *
  * For "heavier" integration tests, see [org.elm.workspace.ElmWorkspaceTestBase]
  */
-abstract class ElmTestBase : LightPlatformCodeInsightFixtureTestCase(), ElmTestCase {
+abstract class ElmTestBase : BasePlatformTestCase(), ElmTestCase {
 
     override fun getProjectDescriptor(): LightProjectDescriptor = ElmDefaultDescriptor
 
@@ -80,15 +80,14 @@ abstract class ElmTestBase : LightPlatformCodeInsightFixtureTestCase(), ElmTestC
 
     override fun getTestDataPath(): String = "${ElmTestCase.testResourcesPath}/$dataPath"
 
-    override fun runTest() {
-        val projectDescriptor = projectDescriptor
+    override fun shouldRunTest(): Boolean {
         val reason = (projectDescriptor as? ElmProjectDescriptorBase)?.skipTestReason
         if (reason != null) {
             System.err.println("SKIP $name: $reason")
-            return
+            return false
         }
 
-        super.runTest()
+        return super.shouldRunTest()
     }
 
     protected val fileName: String
@@ -113,7 +112,7 @@ abstract class ElmTestBase : LightPlatformCodeInsightFixtureTestCase(), ElmTestC
         action()
 
         val afterDir = getVirtualFileByName("$testDataPath/$after")
-        PlatformTestUtil.assertDirectoriesEqual(afterDir, beforeDir)
+        PlatformTestUtil.assertDirectoriesEqual(afterDir!!, beforeDir)
     }
 
     protected fun checkByDirectory(@Language("Elm") before: String, @Language("Elm") after: String, action: () -> Unit) {
@@ -287,7 +286,7 @@ abstract class ElmTestBase : LightPlatformCodeInsightFixtureTestCase(), ElmTestC
             if (' ' in name) return name.replace(" ", "_")
 
             return name.split("(?=[A-Z])".toRegex())
-                    .map(String::toLowerCase)
+                    .map(String::lowercase)
                     .joinToString("_")
         }
 

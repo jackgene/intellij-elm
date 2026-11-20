@@ -1,6 +1,7 @@
 package org.elm.workspace
 
 import org.elm.TestClientLocation
+import com.intellij.testFramework.IndexingTestUtil
 import org.elm.fileTree
 import org.elm.lang.core.psi.elements.ElmImportClause
 import org.elm.lang.core.stubs.index.ElmModulesIndex
@@ -297,6 +298,7 @@ class ElmWorkspaceResolveTest : ElmWorkspaceTestBase() {
             asyncAttachElmProject(rootPath.resolve("a/elm.json")).get()
             asyncAttachElmProject(rootPath.resolve("b/elm.json")).get()
         }
+        IndexingTestUtil.waitUntilIndexesAreReady(project)
 
         val elmProjA = project.elmWorkspace.allProjects.find { it.presentableName == "a" }!!
         val elmProjB = project.elmWorkspace.allProjects.find { it.presentableName == "b" }!!

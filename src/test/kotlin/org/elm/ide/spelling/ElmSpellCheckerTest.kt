@@ -1,6 +1,6 @@
 package org.elm.ide.spelling
 
-import com.intellij.spellchecker.inspections.SpellCheckingInspection
+import com.intellij.grazie.spellcheck.GrazieSpellCheckingInspection
 import org.elm.lang.ElmTestBase
 import org.intellij.lang.annotations.Language
 
@@ -30,7 +30,7 @@ class ElmSpellCheckerTest : ElmTestBase() {
 
 
     private fun doTest(@Language("Elm") text: String, processComments: Boolean = true, processLiterals: Boolean = true) {
-        val inspection = SpellCheckingInspection()
+        val inspection = GrazieSpellCheckingInspection()
         inspection.processLiterals = processLiterals
         inspection.processComments = processComments
 

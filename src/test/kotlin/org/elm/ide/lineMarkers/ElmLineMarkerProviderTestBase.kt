@@ -7,10 +7,8 @@
 
 package org.elm.ide.lineMarkers
 
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl
+import com.intellij.codeInsight.daemon.LineMarkerInfo
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.project.Project
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase
 import org.elm.lang.ElmTestBase
 import org.intellij.lang.annotations.Language
 
@@ -21,7 +19,7 @@ abstract class ElmLineMarkerProviderTestBase : ElmTestBase() {
         myFixture.configureByText("Main.elm", source)
         myFixture.doHighlighting()
         val expected = markersFrom(source)
-        val actual = markersFrom(myFixture.editor, myFixture.project)
+        val actual = markersFrom(myFixture.editor)
         assertEquals(expected.joinToString(COMPARE_SEPARATOR), actual.joinToString(COMPARE_SEPARATOR))
     }
 
@@ -31,8 +29,10 @@ abstract class ElmLineMarkerProviderTestBase : ElmTestBase() {
                     .filter { it.value.contains(MARKER) }
                     .map { Pair(it.index, it.value.substring(it.value.indexOf(MARKER) + MARKER.length).trim()) }
 
-    private fun markersFrom(editor: Editor, project: Project) =
-            DaemonCodeAnalyzerImpl.getLineMarkers(editor.document, project)
+    private fun markersFrom(editor: Editor) =
+            myFixture.findAllGutters()
+                    .filterIsInstance<LineMarkerInfo.LineMarkerGutterIconRenderer<*>>()
+                    .map { it.lineMarkerInfo }
                     .map {
                         Pair(editor.document.getLineNumber(it.element?.textRange?.startOffset as Int),
                                 it.lineMarkerTooltip)

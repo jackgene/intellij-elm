@@ -8,8 +8,6 @@ import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Condition
-import com.intellij.util.Consumer
 import org.elm.lang.core.ElmFileType
 
 @State(
@@ -23,8 +21,8 @@ class ElmTestAutoTestManager internal constructor(
     override fun createWatcher(project: Project) =
             DelayedDocumentWatcher(project,
                     myDelayMillis,
-                    Consumer { restartAllAutoTests(it) },
-                    Condition { it.fileType == ElmFileType && FileEditorManager.getInstance(project).isFileOpen(it) }
+                    this,
+                    { it.fileType == ElmFileType && FileEditorManager.getInstance(project).isFileOpen(it) }
             )
 }
 

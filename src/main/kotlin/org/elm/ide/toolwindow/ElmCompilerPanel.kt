@@ -80,7 +80,7 @@ class ElmCompilerPanel(
         }
 
     private fun toNiceName(title: String) =
-            title.split(" ").joinToString(" ") { it.first() + it.substring(1).toLowerCase() }
+            title.split(" ").joinToString(" ") { it.first() + it.substring(1).lowercase() }
 
     private fun Region.pretty() = "${start.line} : ${start.column}"
 

@@ -119,7 +119,7 @@ Elm File
           PsiElement(NUMBER_LITERAL)('2')
       PsiElement(RIGHT_BRACE)('}')
   PsiElement(DOT)('.')
-  PsiErrorElement:unmatched input
+  PsiErrorElement:Unmatched input
     <empty list>
   PsiElement(VIRTUAL_END_DECL)('\n')
   ElmValueDeclaration(VALUE_DECLARATION)

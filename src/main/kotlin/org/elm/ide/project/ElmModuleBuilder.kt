@@ -70,7 +70,7 @@ class ElmModuleBuilder : ModuleBuilder() {
     override fun getModuleType(): ModuleType<*> =
             ElmModuleType.INSTANCE
 
-    override fun isSuitableSdkType(sdkType: SdkTypeId?): Boolean =
+    override fun isSuitableSdkType(sdkType: SdkTypeId): Boolean =
             true // we don't care about IntelliJ's concept of SDK
 
     override fun getCustomOptionsStep(context: WizardContext, parentDisposable: Disposable): ModuleWizardStep =

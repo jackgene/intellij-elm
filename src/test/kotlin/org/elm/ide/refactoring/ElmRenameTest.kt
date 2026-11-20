@@ -27,7 +27,6 @@ SOFTWARE.
 package org.elm.ide.refactoring
 
 import com.intellij.testFramework.UsefulTestCase
-import com.intellij.testFramework.exceptionCases.IncorrectOperationExceptionCase
 import com.intellij.util.IncorrectOperationException
 import org.elm.lang.ElmTestBase
 import org.elm.lang.core.psi.descendantsOfType
