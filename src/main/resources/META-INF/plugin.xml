@@ -283,8 +283,8 @@
 
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.platform.testRunner</depends>
-    <depends>com.intellij.structureView</depends>
+    <depends>intellij.testRunner.plugin</depends>
+    <depends>intellij.structureView.plugin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <additionalTextAttributes scheme="Default" file="colorSchemes/ElmDefault.xml"/>

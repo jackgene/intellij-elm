@@ -1,4 +1,5 @@
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -79,6 +80,7 @@ intellijPlatform {
     pluginVerification {
         ides {
             current()
+            create(IntelliJPlatformType.IntellijIdea, "2026.3")
         }
     }
 }
